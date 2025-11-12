@@ -21,8 +21,7 @@
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "check": "npm run build && tsc",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
-    "lint": "next lint",
-    "get-datasource-id": "tsx scripts/get-datasource-id.ts"
+    "lint": "next lint"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.11.1",

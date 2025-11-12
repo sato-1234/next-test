@@ -14,7 +14,7 @@ npm install # rclone.jsのエラーになる場合以下のオプションをつ
 npm install --ignore-scripts
 ```
 
-## preview（ローカル）で ISR・SSG・SSR の表示を確認
+## preview（ローカル）で SSG・SSR・ISR の表示を確認
 
 ```
 npm run preview
@@ -29,4 +29,4 @@ npm run preview
 ## 本番にデプロイする場合
 
 こちらの記事を参考してください
-XXXX
+https://qiita.com/sattoon/items/bdb66ee327741b777aaf
