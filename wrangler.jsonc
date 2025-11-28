@@ -18,7 +18,15 @@
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "next-test-cache" // 作成したバケット名
+      "bucket_name": "next-test-cache", // 作成したバケット名
+      "preview_bucket_name": "next-test-cache-preview"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "NEXT_CACHE_WORKERS_KV",
+      "id": "0f5c116f28e543fe91cb79afad6cc9e0",
+      "preview_id": "eaee24999e6e41e7a3ec3488ec126bc6"
     }
   ]
 }
