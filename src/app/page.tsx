@@ -3,16 +3,32 @@ export const dynamic = "force-static"; // 明示的にSSGを指定（build時に
 export default async function Page() {
   return (
     <main>
-      <h1>SSG・SSR・ISR 確認</h1>
-      <ul>
+      <h1 style={{ margin: "20px" }}>SSG・SSR・ISR 表示確認</h1>
+      <ul style={{ margin: "20px" }}>
         <li>
-          <a href="/ssg">SSG確認</a>
+          <a style={{ lineHeight: "20px", color: "blue" }} href="/ssg">
+            SSG確認
+          </a>
         </li>
         <li>
-          <a href="/ssr">SSR確認</a>
+          <a style={{ lineHeight: "20px", color: "blue" }} href="/ssr">
+            SSR確認
+          </a>
         </li>
         <li>
-          <a href="/isr">ISR確認</a>
+          <a style={{ lineHeight: "20px", color: "blue" }} href="/isr">
+            ISR確認（revalidate）
+          </a>
+        </li>
+        <li>
+          <a style={{ lineHeight: "20px", color: "blue" }} href="/isr-f">
+            ISR確認（fetch、revalidateTag、revalidatePath）
+          </a>
+        </li>
+        <li>
+          <a style={{ lineHeight: "20px", color: "blue" }} href="/isr-u">
+            ISR確認（unstable_cache、revalidateTag、revalidatePath）
+          </a>
         </li>
       </ul>
     </main>
