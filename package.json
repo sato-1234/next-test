@@ -19,6 +19,8 @@
     "start": "next start",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "open-build": "opennextjs-cloudflare build",
+    "open-deploy": "opennextjs-cloudflare deploy",
     "check": "npm run build && tsc",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
     "lint": "next lint"

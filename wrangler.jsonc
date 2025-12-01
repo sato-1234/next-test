@@ -38,16 +38,23 @@
       "database_id": "aace9fc9-5a9d-4a28-bcbf-e93d5886684c" // wrangler d1 create で発行されたID
     }
   ],
+  // "build": {
+  //   "command": "npm run build",
+  //   "cwd": "."
+  //   //"watch_paths": ["src/**/*.ts", "src/**/*.tsx"]
+  // },
   // 3. Durable Objects (キュー処理 ＆ キャッシュパージ用)
   "durable_objects": {
     "bindings": [
       {
         "name": "NEXT_CACHE_DO_QUEUE",
         "class_name": "DOQueueHandler" //アクセスが殺到しても、同じページの再生成処理（ISR）を重複して走らせないように整理する
+        //"script_name": "next-test"
       },
       {
         "name": "NEXT_CACHE_DO_PURGE", // ★パージ用のDOを追加
         "class_name": "BucketCachePurge" //キャッシュ削除依頼を一時的に貯めておいて、まとめてCloudflareに投げる（バッファリング）」役割です。これがないと、大量の更新があった時にAPI制限（Rate Limit）に引っかかってしまい
+        //"script_name": "next-test"
       }
     ]
   },
@@ -55,7 +62,7 @@
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["DOQueueHandler", "BucketCachePurge"]
+      "new_sqlite_classes": ["DOQueueHandler", "BucketCachePurge"] // new_sqlite_classes → new_classes 検討中
     }
   ]
 }
