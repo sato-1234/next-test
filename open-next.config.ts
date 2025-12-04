@@ -55,8 +55,10 @@ const config = {
 
   // カスタムドメインが設定されている場合のみ有効化
   // 環境変数 CACHE_PURGE_ZONE_ID が設定されている場合のみ cachePurge を有効化
+  // デバッグ用: directモードでテスト（エラーログが確認しやすい）
+  // 本番環境では durableObject モードに戻すことを推奨
   ...(process.env.CACHE_PURGE_ZONE_ID
-    ? { cachePurge: purgeCache({ type: "durableObject" }) }
+    ? { cachePurge: purgeCache({ type: "direct" }) }
     : {}),
 };
 

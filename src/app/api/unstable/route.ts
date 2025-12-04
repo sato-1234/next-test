@@ -7,7 +7,7 @@ export async function GET() {
   revalidateTag("unstable-data");
 
   // 念のためパスのキャッシュも削除
-  // revalidatePath("/isr-u");
+  revalidatePath("/isr-u");
 
   return NextResponse.json({
     message: "unstable-data削除",
