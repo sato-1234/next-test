@@ -41,7 +41,7 @@ const config = {
   // デバッグ用: bypassTagCacheOnCacheHitをfalseに設定してTag Cacheを確認
   incrementalCache: withRegionalCache(r2IncrementalCache, {
     mode: "long-lived",
-    bypassTagCacheOnCacheHit: false, // Tag Cacheを確認するためfalseに設定
+    bypassTagCacheOnCacheHit: true, // Tag Cacheを確認するためfalseに設定
   }),
 
   // 2. Queue設定 (ISRの待機列管理)
@@ -53,14 +53,14 @@ const config = {
   // 4. ISRページへのアクセスを爆速にする
   // Next.js 14/15 の新機能 PPR (Partial Prerendering) を使う場合のみ、この機能が邪魔になるので falseにする(PPRを使わないならtrue推奨）
   // PPRは「1つのページの中に、静的な部分（SSG）と動的な部分（SSR）を混ぜる技術
-  // デバッグ用: falseに設定してキャッシュを無効化（revalidateTagの動作確認用）
-  enableCacheInterception: false,
+  // デバッグ用: falseに設定して完全にキャッシュを無効化（revalidateTagの動作確認用）
+  enableCacheInterception: true,
 
   // Cache Purge設定
   // デバッグ用: directモードでテスト（エラーログが確認しやすい）
   // 本番環境では durableObject モードに戻すことを推奨
   // 注意: シークレット CACHE_PURGE_API_TOKEN と CACHE_PURGE_ZONE_ID が必要です
-  cachePurge: purgeCache({ type: "direct" }),
+  cachePurge: purgeCache({ type: "durableObject" }),
 };
 
 export default defineCloudflareConfig(config);
