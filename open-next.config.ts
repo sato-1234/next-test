@@ -38,8 +38,10 @@ import { purgeCache } from "@opennextjs/cloudflare/overrides/cache-purge/index";
 const config = {
   // 1. R2設定 (Regional Cacheで高速化)
   // withRegionalCacheで、ユーザーに近いCloudflareのエッジサーバー（日本なら東京や大阪のサーバー）のメモリに、R2のデータを一時コピーしてくれます
+  // デバッグ用: bypassTagCacheOnCacheHitをfalseに設定してTag Cacheを確認
   incrementalCache: withRegionalCache(r2IncrementalCache, {
     mode: "long-lived",
+    bypassTagCacheOnCacheHit: false, // Tag Cacheを確認するためfalseに設定
   }),
 
   // 2. Queue設定 (ISRの待機列管理)
