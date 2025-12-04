@@ -41,7 +41,7 @@ const config = {
   // デバッグ用: bypassTagCacheOnCacheHitをfalseに設定してTag Cacheを確認
   incrementalCache: withRegionalCache(r2IncrementalCache, {
     mode: "long-lived",
-    bypassTagCacheOnCacheHit: true, // Tag Cacheを確認するためfalseに設定
+    bypassTagCacheOnCacheHit: false, // Tag Cacheを確認するためfalseに設定
   }),
 
   // 2. Queue設定 (ISRの待機列管理)
