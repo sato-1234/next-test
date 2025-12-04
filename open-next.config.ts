@@ -51,15 +51,14 @@ const config = {
   // 4. ISRページへのアクセスを爆速にする
   // Next.js 14/15 の新機能 PPR (Partial Prerendering) を使う場合のみ、この機能が邪魔になるので falseにする(PPRを使わないならtrue推奨）
   // PPRは「1つのページの中に、静的な部分（SSG）と動的な部分（SSR）を混ぜる技術
-  enableCacheInterception: true,
+  // デバッグ用: falseに設定してキャッシュを無効化（revalidateTagの動作確認用）
+  enableCacheInterception: false,
 
-  // カスタムドメインが設定されている場合のみ有効化
-  // 環境変数 CACHE_PURGE_ZONE_ID が設定されている場合のみ cachePurge を有効化
+  // Cache Purge設定
   // デバッグ用: directモードでテスト（エラーログが確認しやすい）
   // 本番環境では durableObject モードに戻すことを推奨
-  ...(process.env.CACHE_PURGE_ZONE_ID
-    ? { cachePurge: purgeCache({ type: "direct" }) }
-    : {}),
+  // 注意: シークレット CACHE_PURGE_API_TOKEN と CACHE_PURGE_ZONE_ID が必要です
+  cachePurge: purgeCache({ type: "direct" }),
 };
 
 export default defineCloudflareConfig(config);
