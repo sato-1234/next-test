@@ -38,10 +38,11 @@ import { purgeCache } from "@opennextjs/cloudflare/overrides/cache-purge/index";
 const config = {
   // 1. R2設定 (Regional Cacheで高速化)
   // withRegionalCacheで、ユーザーに近いCloudflareのエッジサーバー（日本なら東京や大阪のサーバー）のメモリに、R2のデータを一時コピーしてくれます
-  // デバッグ用: bypassTagCacheOnCacheHitをfalseに設定してTag Cacheを確認
+  // bypassTagCacheOnCacheHit: false にすることで、Regional Cacheヒット時でもTag Cacheをチェックし、revalidateTagが正しく動作します
+  // true にすると、Regional Cacheから古いデータが返される可能性があるため、revalidateTagが機能しません
   incrementalCache: withRegionalCache(r2IncrementalCache, {
     mode: "long-lived",
-    bypassTagCacheOnCacheHit: false, // Tag Cacheを確認するためfalseに設定
+    bypassTagCacheOnCacheHit: false, // revalidateTagを正しく動作させるためfalseを推奨
   }),
 
   // 2. Queue設定 (ISRの待機列管理)
@@ -53,14 +54,18 @@ const config = {
   // 4. ISRページへのアクセスを爆速にする
   // Next.js 14/15 の新機能 PPR (Partial Prerendering) を使う場合のみ、この機能が邪魔になるので falseにする(PPRを使わないならtrue推奨）
   // PPRは「1つのページの中に、静的な部分（SSG）と動的な部分（SSR）を混ぜる技術
-  // デバッグ用: falseに設定して完全にキャッシュを無効化（revalidateTagの動作確認用）
+  // true にすることで、キャッシュされたページをNextServerを呼び出さずに返すため、コールドスタートのパフォーマンスが向上します
   enableCacheInterception: true,
 
   // Cache Purge設定
-  // デバッグ用: directモードでテスト（エラーログが確認しやすい）
-  // 本番環境では durableObject モードに戻すことを推奨
+  // revalidateTag/revalidatePath が呼ばれたときに、Cloudflare CDNキャッシュを自動的に削除します
+  // type: "durableObject" は、リクエストをバッファリングしてまとめて処理するため、APIレートリミットを回避できます
+  // type: "direct" は、即座にAPIを呼び出すため、大量のリクエストがある場合はレートリミットに引っかかる可能性があります
   // 注意: シークレット CACHE_PURGE_API_TOKEN と CACHE_PURGE_ZONE_ID が必要です
-  cachePurge: purgeCache({ type: "durableObject" }),
+  // プレビュー環境では、zone IDが設定できないので、cachePurgeを無効化します
+  ...(process.env.CACHE_PURGE_ZONE_ID
+    ? { cachePurge: purgeCache({ type: "durableObject" }) }
+    : {}),
 };
 
 export default defineCloudflareConfig(config);

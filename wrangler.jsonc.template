@@ -14,6 +14,8 @@
   "observability": {
     "enabled": true
   },
+  // エラー時のスタックトレースを元のソースコードにマッピング
+  // 本番環境でエラーが発生した際、TypeScript/JavaScriptの元のコード行番号でエラーを確認できます
   "upload_source_maps": true,
   // 0. WORKER_SELF_REFERENCE を使うと、Cloudflareの内部ネットワーク経由で**「自分自身」を直接呼び出して、高速かつ確実にページ再生成を実行できる**ようになります。
   "services": [
@@ -23,38 +25,40 @@
     }
   ],
   // 1. R2バケット (HTML/JSONの実体保存用)
+  // 本番環境: bucket_nameを使用
+  // プレビュー環境: preview_bucket_nameを使用（Cloudflareが自動的に切り替え）
+  // ローカル開発: preview_bucket_nameのみ設定（R2_PREVIEW_BUCKET_NAME）
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "next-test-cache", // 本番用
-      "preview_bucket_name": "next-test-cache-preview" //preview用
+      "bucket_name": "${R2_BUCKET_NAME}",
+      "preview_bucket_name": "${R2_PREVIEW_BUCKET_NAME}"
     }
   ],
   // 2. D1データベース (タグ管理用 - Small Site構成)
+  // 本番環境: database_idを使用
+  // プレビュー環境: preview_database_idを使用（Cloudflareが自動的に切り替え）
+  // ローカル開発: preview_database_idのみ設定（D1_PREVIEW_DATABASE_ID）
   "d1_databases": [
     {
       "binding": "NEXT_TAG_CACHE_D1",
-      "database_name": "next-test", // 作成したD1名
-      "database_id": "aace9fc9-5a9d-4a28-bcbf-e93d5886684c" // wrangler d1 create で発行されたID
+      "database_name": "${D1_DATABASE_NAME}",
+      "database_id": "${D1_DATABASE_ID}",
+      "preview_database_id": "${D1_PREVIEW_DATABASE_ID}"
     }
   ],
-  // "build": {
-  //   "command": "npm run build",
-  //   "cwd": "."
-  //   //"watch_paths": ["src/**/*.ts", "src/**/*.tsx"]
-  // },
   // 3. Durable Objects (キュー処理 ＆ キャッシュパージ用)
+  // NEXT_CACHE_DO_QUEUE: 常に必要（ISRのキュー処理）
+  // NEXT_CACHE_DO_PURGE: cachePurgeが有効な場合のみ必要（Cloudflare CDNキャッシュの削除）
   "durable_objects": {
     "bindings": [
       {
         "name": "NEXT_CACHE_DO_QUEUE",
-        "class_name": "DOQueueHandler" //アクセスが殺到しても、同じページの再生成処理（ISR）を重複して走らせないように整理する
-        //"script_name": "next-test"
+        "class_name": "DOQueueHandler"
       },
       {
-        "name": "NEXT_CACHE_DO_PURGE", // ★パージ用のDOを追加
-        "class_name": "BucketCachePurge" //キャッシュ削除依頼を一時的に貯めておいて、まとめてCloudflareに投げる（バッファリング）」役割です。これがないと、大量の更新があった時にAPI制限（Rate Limit）に引っかかってしまい
-        //"script_name": "next-test"
+        "name": "NEXT_CACHE_DO_PURGE",
+        "class_name": "BucketCachePurge"
       }
     ]
   },
@@ -62,7 +66,8 @@
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["DOQueueHandler", "BucketCachePurge"] // new_sqlite_classes → new_classes 検討中
+      "new_sqlite_classes": ["DOQueueHandler", "BucketCachePurge"]
     }
   ]
 }
+

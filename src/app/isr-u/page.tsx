@@ -47,16 +47,16 @@ export default async function SamplePage() {
           npm run
           start：指定API「http://localhost:3000/api/unstable」実行で時間は更新される（ISR）
         </p>
-        <p style={{ color: "red" }}>
+        <p>
           npm run
-          preview：指定API「http://localhost:8787/api/unstable」実行で時間は更新されない。
+          preview：指定API「http://localhost:8787/api/unstable」実行で時間は更新される（ISR）
         </p>
         <p>
           npm run
           deploy：指定API「https://カスタムドメイン/api/unstable」実行で時間は更新される（ISR）
         </p>
         <p>
-          ※cloudflareで「revalidateTag」「revalidatePath」を利用してキャッシュを削除する場合、カスタムドメインと適切な設定が必要みたいです。
+          ※cloudflareで「revalidateTag」「revalidatePath」を利用してCDNキャッシュを削除する場合、カスタムドメインと適切な設定（ゾーンやAPIトークン）が必要みたいです。
         </p>
         <a
           style={{ color: "blue", textDecoration: "underline" }}
